@@ -21,6 +21,43 @@
     });
   }
 
+  // Hero image carousel
+  document.querySelectorAll(".hero-media").forEach(function (carousel) {
+    var slides = carousel.querySelectorAll("img");
+    var dots = carousel.querySelectorAll(".hero-dot");
+    if (slides.length < 2) return;
+    var index = 0;
+    var timer;
+
+    function goTo(next) {
+      slides[index].classList.remove("is-active");
+      if (dots[index]) {
+        dots[index].classList.remove("is-active");
+        dots[index].setAttribute("aria-selected", "false");
+      }
+      index = next;
+      slides[index].classList.add("is-active");
+      if (dots[index]) {
+        dots[index].classList.add("is-active");
+        dots[index].setAttribute("aria-selected", "true");
+      }
+    }
+
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(function () { goTo((index + 1) % slides.length); }, 5000);
+    }
+
+    dots.forEach(function (dot, i) {
+      dot.addEventListener("click", function () {
+        goTo(i);
+        restart();
+      });
+    });
+
+    restart();
+  });
+
   // Web3Forms quote form submission
   var form = document.getElementById("quote-form");
   var statusEl = document.getElementById("form-status");
